@@ -1,0 +1,44 @@
+{
+  "name": "duplicate-lines-keeper",
+  "displayName": "Duplicate Lines Keeper",
+  "version": "0.0.1",
+  "description": "Removes unique lines from selection, keeping only duplicates",
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paleite/duplicate-lines-keeper"
+  },
+  "license": "MIT",
+  "publisher": "paleite",
+  "main": "./extension.js",
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "duplicate-lines-keeper.keepDuplicates",
+        "title": "Keep Only Duplicate Lines"
+      }
+    ]
+  },
+  "activationEvents": [],
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  }
+}
