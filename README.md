@@ -1,14 +1,12 @@
-# Duplicate Lines Keeper
+# Duplicate Lines Manager
 
 A Visual Studio Code extension that processes selected text and removes any lines that appear only once, keeping only duplicate lines.
 
 ## Features
 
-- Removes unique lines from the selected text
-- Preserves duplicate lines in their original order
-- Keeps empty lines
+- Removes unique lines from the selected text, and vice versa
+- Preserves lines in their original order
 - Shows a count of removed lines
-- Trims whitespace when comparing lines
 
 ## Usage
 
@@ -37,4 +35,3 @@ Initial release:
 
 - Basic functionality to keep only duplicate lines
 - Support for handling empty lines
-- Whitespace trimming for comparison

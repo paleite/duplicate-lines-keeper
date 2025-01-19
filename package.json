@@ -1,14 +1,14 @@
 {
-  "name": "duplicate-lines-keeper",
-  "displayName": "Duplicate Lines Keeper",
+  "name": "duplicate-lines-manager",
+  "displayName": "Duplicate Lines Manager",
   "version": "0.0.1",
-  "description": "Removes unique lines from selection, keeping only duplicates",
+  "description": "Removes unique lines from selection, keeping only duplicates, and vice versa",
   "categories": [
     "Other"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/paleite/duplicate-lines-keeper"
+    "url": "https://github.com/paleite/duplicate-lines-manager"
   },
   "license": "MIT",
   "publisher": "paleite",
@@ -21,8 +21,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "duplicate-lines-keeper.keepDuplicates",
+        "command": "duplicate-lines-manager.keepDuplicates",
         "title": "Keep Only Duplicate Lines"
+      },
+      {
+        "command": "duplicate-lines-manager.keepUniques",
+        "title": "Keep Only Unique Lines"
       }
     ]
   },

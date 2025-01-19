@@ -1,56 +1,106 @@
 const vscode = require("vscode");
 
-function activate(context) {
-  let disposable = vscode.commands.registerCommand(
-    "duplicate-lines-keeper.keepDuplicates",
-    function () {
-      const editor = vscode.window.activeTextEditor;
+const keepDuplicates = () => {
+  const editor = vscode.window.activeTextEditor;
 
-      if (!editor) {
-        vscode.window.showInformationMessage("No editor is active");
-        return;
-      }
+  if (!editor) {
+    vscode.window.showInformationMessage("No editor is active");
 
-      const selection = editor.selection;
+    return;
+  }
 
-      if (selection.isEmpty) {
-        vscode.window.showInformationMessage("Please select some text first");
-        return;
-      }
+  const { selection } = editor;
 
-      const text = editor.document.getText(selection);
-      const lines = text.split(/\r?\n/);
+  if (selection.isEmpty) {
+    vscode.window.showInformationMessage("Please select some text first");
 
-      const lineCount = new Map();
-      for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (trimmedLine) {
-          lineCount.set(trimmedLine, (lineCount.get(trimmedLine) || 0) + 1);
-        }
-      }
+    return;
+  }
 
-      const duplicateLines = lines.filter((line) => {
-        const trimmedLine = line.trim();
-        return !trimmedLine || lineCount.get(trimmedLine) > 1;
-      });
+  const text = editor.document.getText(selection);
+  const lines = text.split(/\r?\n/);
 
-      editor
-        .edit((editBuilder) => {
-          editBuilder.replace(selection, duplicateLines.join("\n"));
-        })
-        .then(() => {
-          const removedCount = lines.length - duplicateLines.length;
-          vscode.window.showInformationMessage(
-            `Removed ${removedCount} unique line${removedCount === 1 ? "" : "s"}`,
-          );
-        });
-    },
+  const lineCount = new Map();
+  for (const line of lines) {
+    if (line) {
+      lineCount.set(line, (lineCount.get(line) || 0) + 1);
+    }
+  }
+
+  const duplicateLines = lines.filter(
+    (line) => !line || lineCount.get(line) > 1
   );
 
-  context.subscriptions.push(disposable);
+  editor
+    .edit((editBuilder) => {
+      editBuilder.replace(selection, duplicateLines.join("\n"));
+    })
+    .then(() => {
+      const removedCount = lines.length - duplicateLines.length;
+      vscode.window.showInformationMessage(
+        `Removed ${removedCount} unique line${removedCount === 1 ? "" : "s"}`
+      );
+    });
+};
+
+const keepUniques = () => {
+  const editor = vscode.window.activeTextEditor;
+
+  if (!editor) {
+    vscode.window.showInformationMessage("No editor is active");
+
+    return;
+  }
+
+  const { selection } = editor;
+
+  if (selection.isEmpty) {
+    vscode.window.showInformationMessage("Please select some text first");
+
+    return;
+  }
+
+  const text = editor.document.getText(selection);
+  const lines = text.split(/\r?\n/);
+
+  const lineCount = new Map();
+  for (const line of lines) {
+    if (line) {
+      lineCount.set(line, (lineCount.get(line) || 0) + 1);
+    }
+  }
+
+  const uniqueLines = lines.filter((line) => line && lineCount.get(line) === 1);
+
+  editor
+    .edit((editBuilder) => {
+      editBuilder.replace(selection, uniqueLines.join("\n"));
+    })
+    .then(() => {
+      const removedCount = lines.length - uniqueLines.length;
+      vscode.window.showInformationMessage(
+        `Removed ${removedCount} duplicate line${removedCount === 1 ? "" : "s"}`
+      );
+    });
+};
+
+function activate(context) {
+  const keepDuplicatesDisposable = vscode.commands.registerCommand(
+    "duplicate-lines-manager.keepDuplicates",
+    keepDuplicates
+  );
+
+  const keepUniquesDisposable = vscode.commands.registerCommand(
+    "duplicate-lines-manager.keepUniques",
+    keepUniques
+  );
+
+  context.subscriptions.push(keepDuplicatesDisposable, keepUniquesDisposable);
 }
 
-function deactivate() {}
+function deactivate() {
+  // Intentionally left blank
+}
 
 module.exports = {
   activate,
