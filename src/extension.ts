@@ -1,4 +1,4 @@
-const vscode = require("vscode");
+import vscode from "vscode";
 
 const getActiveEditorOrNotify = () => {
   const editor = vscode.window.activeTextEditor;
@@ -12,7 +12,7 @@ const getActiveEditorOrNotify = () => {
   return editor;
 };
 
-const getSelectedTextOrNotify = (/** @type {vscode.TextEditor} */ editor) => {
+const getSelectedTextOrNotify = (editor: vscode.TextEditor) => {
   const { selection } = editor;
 
   if (selection.isEmpty) {
@@ -24,36 +24,30 @@ const getSelectedTextOrNotify = (/** @type {vscode.TextEditor} */ editor) => {
   return editor.document.getText(selection);
 };
 
-const countLines = (/** @type {string[]} */ lines) =>
-  lines.reduce(
-    (
-      /** @type {Map<string, number>} */ countMap,
-      /** @type {string} */ line,
-    ) => {
-      if (line) {
-        countMap.set(line, (countMap.get(line) || 0) + 1);
-      }
+const countLines = (lines: string[]) =>
+  lines.reduce((countMap: Map<string, number>, line: string) => {
+    if (line) {
+      countMap.set(line, (countMap.get(line) || 0) + 1);
+    }
 
-      return countMap;
-    },
-    new Map(),
-  );
+    return countMap;
+  }, new Map());
 
 const replaceEditorSelection = async (
-  /** @type {vscode.TextEditor} */ editor,
-  /** @type {vscode.Selection} */ selection,
-  /** @type {string} */ newText,
-  /** @type {string} */ message,
+  editor: vscode.TextEditor,
+  selection: vscode.Selection,
+  newText: string,
+  message: string,
 ) => {
-  await editor.edit((/** @type {vscode.TextEditorEdit} */ editBuilder) =>
+  await editor.edit((editBuilder: vscode.TextEditorEdit) =>
     editBuilder.replace(selection, newText),
   );
   vscode.window.showInformationMessage(message);
 };
 
 const processLines = (
-  /** @type {(count: number) => boolean} */ filterFn,
-  /** @type {"duplicate" | "unique"} */ removalType,
+  filterFn: (count: number) => boolean,
+  removalType: "duplicate" | "unique",
 ) => {
   const editor = getActiveEditorOrNotify();
   if (!editor) {
@@ -69,7 +63,7 @@ const processLines = (
   const lineCount = countLines(lines);
 
   const filteredLines = lines.filter(
-    (/** @type {string} */ line) => line && filterFn(lineCount.get(line)),
+    (line: string) => line && filterFn(lineCount.get(line)),
   );
   const removedCount = lines.length - filteredLines.length;
 
@@ -82,29 +76,27 @@ const processLines = (
 };
 
 const keepDuplicates = () =>
-  processLines((/** @type {number} */ count) => count > 1, "unique");
+  processLines((count: number) => count > 1, "unique");
 
 const keepUniques = () =>
-  processLines((/** @type {number} */ count) => count === 1, "duplicate");
+  processLines((count: number) => count === 1, "duplicate");
 
-function activate(/** @type {vscode.ExtensionContext} */ context) {
+const activate = (context: vscode.ExtensionContext) => {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "duplicate-lines-manager.keepDuplicates",
       keepDuplicates,
     ),
+
     vscode.commands.registerCommand(
       "duplicate-lines-manager.keepUniques",
       keepUniques,
     ),
   );
-}
-
-function deactivate() {
-  // Intentionally left blank
-}
-
-module.exports = {
-  activate,
-  deactivate,
 };
+
+const deactivate = () => {
+  // Intentionally left blank
+};
+
+export { activate, deactivate };

@@ -12,11 +12,12 @@
   },
   "license": "MIT",
   "publisher": "paleite",
-  "main": "./extension.js",
+  "main": "./dist/extension.js",
   "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "node ./test/runTest.js"
+    "build": "tsup",
+    "prepackage": "npm run typecheck && npm run build",
+    "package": "vsce package",
+    "typecheck": "tsc --noEmit"
   },
   "contributes": {
     "commands": [
@@ -32,15 +33,12 @@
   },
   "activationEvents": [],
   "devDependencies": {
-    "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "20.x",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/node": "^22.10.7",
     "@types/vscode": "^1.85.0",
-    "@vscode/test-electron": "^2.3.8",
-    "eslint": "^8.56.0",
-    "glob": "^10.3.10",
-    "mocha": "^10.2.0",
-    "typescript": "^5.3.3"
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "vsce": "^2.15.0"
   },
   "engines": {
     "vscode": "^1.85.0"
