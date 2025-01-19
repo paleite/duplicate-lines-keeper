@@ -26,9 +26,7 @@ const getSelectedTextOrNotify = (editor: vscode.TextEditor) => {
 
 const countLines = (lines: string[]) =>
   lines.reduce((countMap: Map<string, number>, line: string) => {
-    if (line) {
-      countMap.set(line, (countMap.get(line) || 0) + 1);
-    }
+    countMap.set(line, (countMap.get(line) || 0) + 1);
 
     return countMap;
   }, new Map());
@@ -62,8 +60,8 @@ const processLines = (
   const lines = text.split(/\r?\n/);
   const lineCount = countLines(lines);
 
-  const filteredLines = lines.filter(
-    (line: string) => line && filterFn(lineCount.get(line)),
+  const filteredLines = lines.filter((line) =>
+    filterFn(lineCount.get(line) || 0),
   );
   const removedCount = lines.length - filteredLines.length;
 
